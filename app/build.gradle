@@ -2,10 +2,16 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
+        passing {
             keyAlias 'android'
             keyPassword 'android'
-            storeFile file('G:/dev/android/projects/ContinuityTests/keystore.jks')
+            storeFile file('../keystore.jks')
+            storePassword 'android'
+        }
+        failing {
+            keyAlias 'android'
+            keyPassword 'android'
+            storeFile file('../bad.jks')
             storePassword 'android'
         }
     }
@@ -18,18 +24,27 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.config
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+
     productFlavors {
         failing {
         }
         passing {
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            productFlavors.passing.signingConfig signingConfigs.passing
+            productFlavors.failing.signingConfig signingConfigs.failing
+        }
+        debug {
+            //FIXME: fix initWith
+            initWith release //Necessary or it always defaults to normal android debug keys , I have no idea what atually triggers the switchover to honor the configs though. Thats' really not the point of this project anyway though
+            productFlavors.passing.signingConfig signingConfigs.passing
+            productFlavors.failing.signingConfig signingConfigs.failing
         }
     }
 }
