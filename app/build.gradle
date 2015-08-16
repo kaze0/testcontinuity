@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'android'
+            keyPassword 'android'
+            storeFile file('G:/dev/android/projects/ContinuityTests/keystore.jks')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
@@ -10,6 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
